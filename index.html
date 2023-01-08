@@ -13,7 +13,15 @@
             var currentlevel = localStorage.getItem("level");
             if (parseInt(currentlevel) < 1) {
                 var continuebutton = document.getElementById("continue");
-                continuebutton.style.display = "none";
+                continuebutton.style.visibility = "none";
+            } else if (isNan(currentlevel)) {
+                // no display
+                var continuebutton = document.getElementById("continue");
+                continuebutton.style.visibility = "none";
+            } else {
+                // display
+                var continuebutton = document.getElementById("continue");
+                continuebutton.style.visibility = "visible";
             }
         }
 
