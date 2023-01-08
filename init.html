@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>  
+        <title>Higher or Lower</title>
+        <link rel="stylesheet" type="text/css" href="base.css">
+        <script src="script.js"></script>
+    </head>
+
+    <script>
+
+        function rdybutclick() {
+            var name = document.getElementById("name").value;
+            if (name == "") {
+
+                alert("Name field is blank. Please enter your name.");
+
+            } else if (name.length > 20) {
+
+                alert("Name field is too long. Please enter a shorter name.");
+
+            }
+            else {
+
+                localStorage.setItem("name", name);
+                document.getElementById("rdybut").style.animation = "selected 2s 1";
+                setTimeout(function() {
+                    window.location.href = "tutorial.html";
+                }, 2000);
+
+            }
+        }
+    </script>
+
+    <!-- ➢ -->
+    <body>
+        <div class="title">Let's Get Started!</div>
+        <div class="initcontainer">
+            <input type="text" class="textinput" id="name" placeholder="Enter your name">
+            <div class="readybutton" id="rdybut" onclick="rdybutclick()">Ready</div>
+        </div>
+        
+    </body>
+
+</html>

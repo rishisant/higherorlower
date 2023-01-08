@@ -1,0 +1,312 @@
+/*
+    Base.css
+    ========
+    Contains all styles for the game "Higher or Lower".
+    This file is used by the game's HTML file.
+*/
+@import url('https://fonts.googleapis.com/css?family=Saira');
+
+/*
+    General
+    -------
+    The following styles are used for the whole game.
+*/
+body {
+    background-image: url(./src/img/back.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    font-family: 'Saira', sans-serif;
+    font-size: 1.5em;
+    color: #fff;
+    text-align: center;
+}
+
+.generalheader {
+    font-size: 1em;
+    font-weight: bold;
+    color: rgb(218, 186, 128);
+    margin-bottom: 5px;
+    text-shadow: 0 0 10px #000, 0 0 10px #000, 0 0 10px #000;
+}
+
+.textinput {
+    background-color: #fff;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font: inherit;
+    text-align: center;
+    font-size: 1.1em;
+    margin: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px #000, 0 0 10px #000, 0 0 10px #000;
+}
+
+.readybutton {
+    background-color: #fff;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font: inherit;
+    text-align: center;
+    font-size: 1.1em;
+    margin: 10px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    box-shadow: 0 0 10px #000, 0 0 10px #000, 0 0 10px #000;
+}
+
+.readybutton:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+.initcontainer {
+    display: flex;
+    flex-direction: row;
+    margin-left: 35%;
+    margin-right: 35%;
+}
+
+/*
+    Main menu
+    ---------
+    The following styles are used for the main menu.
+*/
+
+.title {
+    font-size: 3em;
+    font-weight: bold;
+    color: rgb(218, 186, 128);
+    margin-top: 50px;
+    margin-bottom: 50px;
+    text-shadow: 0 0 10px #000, 0 0 10px #000, 0 0 10px #000;
+}
+
+.title2 {
+    font-size: 2em;
+    font-weight: bold;
+    color: rgb(218, 186, 128);
+    margin-top: 50px;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px #000, 0 0 10px #000, 0 0 10px #000;
+}
+
+.mmenu_button {
+    background-color: #fff;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1.1em;
+    margin: 10px;
+    margin-left: 30%;
+    margin-right: 30%;
+    margin-bottom: 20px;
+    cursor: pointer;
+    box-shadow: 0 0 10px #000, 0 0 10px #000, 0 0 10px #000;
+    /* animation: selected 3s infinite; */
+}
+
+.mmenu_button:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+@keyframes selected {
+    0% {
+        box-shadow: 0 0 10px #000, 0 0 10px #000, 0 0 10px #000;
+    }
+    50% {
+        box-shadow: 0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff;
+    }
+    100% {
+        background-color: rgb(218, 186, 128);
+        box-shadow: 0 0 10px #000, 0 0 10px #000, 0 0 10px #000;
+    }
+}
+
+/*
+    Game
+    ----
+    The following styles are used for the game.
+*/
+
+/* the table spans mostly across the whole screen, and is where the cards are displayed */
+.table {
+    background-image: url(./src/img/tablebg.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    /* width: 100%; */
+    height: 100%;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #000, 0 0 10px #000, 0 0 10px #000;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-bottom: 10%;
+}
+
+.playercolumn {
+    outline:rgb(52, 24, 0) solid 3px;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.opponentcolumn {
+    outline:rgb(52, 24, 0) solid 3px;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.playercard {
+    width: 100px;
+    height: 150px;
+    background-image: url(./src/img/normalcard.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 10px;
+    margin: 10px;
+    box-shadow: 0 0 10px #000, 0 0 10px #000, 0 0 10px #000;
+    color: rgb(0, 0, 0);
+    font-size: 2em;
+    text-align: center;
+    line-height: 150px;
+    text-shadow: 0 0 2px #000, 0 0 2px #000, 0 0 2px #000;
+    -webkit-text-stroke: .2px #fff;
+    font-weight: bold;
+}
+
+.playercard:hover {
+    animation: glow 10s 1;
+    cursor: pointer;
+}
+
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 10px #000, 0 0 10px #000, 0 0 10px #000;
+    }
+    2% {
+        font-size: 1.5em;
+        box-shadow: 0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff;
+    }
+    4% {
+        font-size: 3.4em;
+        box-shadow: 0 0 10px #fff, 0 0 10px #fff, 0 0 10px #fff;
+    }
+    100% {
+        box-shadow: 0 0 10px #000, 0 0 10px #000, 0 0 10px #000;
+    }
+}
+
+.opponentcard {
+    width: 100px;
+    height: 150px;
+    background-image: url(./src/img/chromecard.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 10px;
+    margin: 10px;
+    box-shadow: 0 0 10px #000, 0 0 10px #000, 0 0 10px #000;
+    color: rgb(0, 0, 0);
+    font-size: 2em;
+    text-align: center;
+    line-height: 150px;
+    text-shadow: 0 0 2px #000, 0 0 2px #000, 0 0 2px #000;
+    -webkit-text-stroke: .2px #fff;
+    font-weight: bold;
+}
+
+.currentround {
+    font-size: 1em;
+    font-weight: bold;
+    color: rgb(218, 186, 128);
+    margin-bottom: 5px;
+    text-shadow: 0 0 10px #000, 0 0 10px #000, 0 0 10px #000;
+}
+
+.score {
+    font-size: 1em;
+    font-weight: bold;
+    color: rgb(218, 186, 128);
+    margin-bottom: 15px;
+    text-shadow: 0 0 10px #000, 0 0 10px #000, 0 0 10px #000;
+}
+
+/*
+    Tutorial
+    --------
+    The following styles are used for the tutorial.
+ */
+ .table_tutorial {
+    background-image: url(./src/img/tablebg.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    /* width: 100%; */
+    height: 100%;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #000, 0 0 10px #000, 0 0 10px #000;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-left: 10%;
+    margin-right: 10%;
+    /* margin-bottom:  */
+}
+
+.instruct {
+    background-color: #fff;
+    color:rgb(0, 0, 0);
+    font-size: 0.8em;
+    margin-top: 20px;
+    margin-left: 30%;
+    margin-right: 30%;
+    padding: 15px;
+    outline:rgb(0, 0, 0) solid 3px;
+    border-radius: 10px;
+    margin-bottom: 10%;
+    text-align: center;
+}
+
+.cont_instructions {
+    background-color: #fff;
+    color:rgb(0, 0, 0);
+    font-size: 0.8em;
+    margin-top: 20px;
+    margin-left: 30%;
+    margin-right: 30%;
+    padding: 15px;
+    outline:rgb(0, 0, 0) solid 3px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.cont_instructions:hover {
+    background-color: #000;
+    color: #fff;
+    cursor: pointer;
+}

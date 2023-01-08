@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>  
+        <title>Higher or Lower</title>
+        <link rel="stylesheet" type="text/css" href="base.css">
+        <script src="script.js"></script>
+    </head>
+
+    <script>
+        function onload() {
+            // localStorage.setItem("level", 1);
+            // hide the button "continue" if the player has not gotten to level 1
+            var currentlevel = localStorage.getItem("level");
+            if (parseInt(currentlevel) < 1) {
+                var continuebutton = document.getElementById("continue");
+                continuebutton.style.display = "none";
+            }
+        }
+
+    </script>
+    <!-- ➢ -->
+    <body onload="onload()">
+        <div class="title">Higher or Lower</div>
+        <div class="mmenu_button" id="start_game" onclick="mmenu_buttonclick(1)">Start Game</div>
+        <!-- <div class="mmenu_button" id="instructions" onclick="mmenu_buttonclick(2)">Instructions</div> -->
+        <div class="mmenu_button" id="continue" onclick="mmenu_buttonclick(3)">Continue</div>
+        <div class="mmenu_button" id="achievements" onclick="mmenu_buttonclick(4)">Achievements</div>
+        <div class="mmenu_button" id="credits" onclick="mmenu_buttonclick(5)">Credits</div>
+    </body>
+
+</html>

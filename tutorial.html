@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+    <head>  
+        <title>Higher or Lower</title>
+        <link rel="stylesheet" type="text/css" href="base.css">
+        <script src="script.js"></script>
+    </head>
+
+    <style>
+
+        @keyframes flip {
+            0% {
+                font-size: 0px;
+                transform: rotateX(0deg);
+                transform: rotateY(0deg);
+            }
+            50% {
+                transform: rotateX(180deg);
+                transform: rotateY(180deg);
+            }
+            100% {
+                font-size: 0px;
+                transform: rotateX(360deg);
+                transform: rotateY(360deg);
+            }
+        }
+
+        @keyframes score_up {
+            50% {
+                color: #00ff00;
+                text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00, 0 0 40px #00ff00, 0 0 50px #00ff00, 0 0 60px #00ff00, 0 0 70px #00ff00;
+            }
+            100% {
+
+            }
+        }
+
+        @keyframes score_down {
+            100% {
+                color: #ff0000;
+                text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000, 0 0 50px #ff0000, 0 0 60px #ff0000, 0 0 70px #ff0000;
+            }
+        }
+
+        @keyframes numphase {
+            0% {
+                transform: translateX(5);
+            }
+            100% {
+                transform: translateX(-5px);
+                font-size: 0px;
+            }
+        }
+
+    </style>
+
+    <script>
+        // create an onload function that will run when the page loads
+        // applies animation "flip" to all cards (div = opponentcard/ div=playercard)
+        function onload() {
+            var opponentcards = document.getElementsByClassName("opponentcard");
+            var playercards = document.getElementsByClassName("playercard");
+            for (var i = 0; i < opponentcards.length; i++) {
+                opponentcards[i].style.animation = "flip 3s 1";
+            }
+            for (var i = 0; i < playercards.length; i++) {
+                playercards[i].style.animation = "flip 3s 1";
+            }
+            setTimeout(function() {
+                for (var i = 0; i < opponentcards.length; i++) {
+                    opponentcards[i].style.animation = "none";
+                }
+                for (var i = 0; i < playercards.length; i++) {
+                    playercards[i].style.animation = "none";
+                }
+            }, 3000);
+        }
+
+        function cont_ins() {
+            var instruct = document.getElementsByClassName("instruct")[0];
+            var cont_instructions = document.getElementsByClassName("cont_instructions")[0];
+            var val = instruct.getAttribute("val");
+            if (val == "a") {
+                instruct.innerHTML = "The first round of the game will be a higher round. The best bet for the first round is to play your highest card. Click on the <b>10</b> card to play it.";
+                localStorage.setItem("round_number", 1);
+                localStorage.setItem("pscore", 0);
+                localStorage.setItem("oscore", 0);
+                localStorage.setItem("round", "Higher");
+                cont_instructions.style.visibility = "hidden";
+                var rounddiv = document.getElementsByClassName("currentround")[0];
+                rounddiv.innerHTML = "Round " + localStorage.getItem("round_number") + ": " + localStorage.getItem("round");
+                instruct.setAttribute("val", "b");
+            } else if (val == "d") {
+                localStorage.setItem("tutorialcomplete", "true");
+                localStorage.setItem("level", 1);
+                window.location.href = "unlock.html";
+            } else {
+                return;
+            }
+        }
+
+        function play_card() {
+            // grab the instruct div
+            var instruct = document.getElementsByClassName("instruct")[0];
+            // grab the value of the instruct div
+            var val = instruct.getAttribute("val");
+            if (val == "a") {
+                alert("Continue the instructions prior to playing a card.")
+                return;
+            } else if (val == "b") {
+                // grab the innerHtml of the card that was clciked on 
+                var card = event.target.innerHTML;
+                card = parseInt(card);
+                // if the card isnt == 10, tell them to play the right card
+                if (card != 10) {
+                    alert("You must play the 10 card to continue the tutorial.");
+                    return;
+                } else {
+                    var opponentcards = document.getElementsByClassName("opponentcard");
+                    var opponentcard = opponentcards[Math.floor(Math.random() * opponentcards.length)];
+                    var opponentcardval = opponentcard.getElementsByClassName("cardvalue")[0].getAttribute("val");
+                    // now, call the flip animation on the opponent's card and change the innerHTML to the value of the card
+                    opponentcard.getElementsByClassName("cardvalue")[0].innerHTML = opponentcardval;
+                    opponentcard.style.animation = "flip 1s 1";
+                    // settimeout to let the animation finish
+                    setTimeout(function() {
+                        // since this is a guaranteed victory, give the player 1 point
+                        var pscore = localStorage.getItem("pscore");
+                        pscore = parseInt(pscore);
+                        pscore++;
+                        localStorage.setItem("pscore", pscore);
+                        // grab score div and change score
+                        var scorediv = document.getElementsByClassName("score")[0];
+                        scorediv.innerHTML = "Score: " + localStorage.getItem("pscore") + " - " + localStorage.getItem("oscore");
+                        // give the score div the score_up animation
+                        scorediv.style.animation = "score_up 2s 1";
+                        // change the round number
+                        var round_number = localStorage.getItem("round_number");
+                        round_number = parseInt(round_number);
+                        round_number++;
+                        localStorage.setItem("round_number", round_number);
+                        // change the round
+                        localStorage.setItem("round", "Lower");
+                        // change the round div
+                        var rounddiv = document.getElementsByClassName("currentround")[0];
+                        rounddiv.innerHTML = "Round " + localStorage.getItem("round_number") + ": " + localStorage.getItem("round");
+                        // change the instruct div
+                        instruct.innerHTML = "The next round will be a lower round. The best bet for the next round is to play your lowest card. Click on the <b>2</b> card to play it.";
+                        // now change the val to "c"
+                        instruct.setAttribute("val", "c");
+                        setTimeout(function() {
+                            // change the opponent's card to ?
+                            document.getElementById("card2").innerHTML = 5;
+                            document.getElementById("card2").getAttribute("val", 5);
+                            var opponentcards = document.getElementsByClassName("opponentcard");
+                            for (var i = 0; i < opponentcards.length; i++) {
+                                opponentcards[i].getElementsByClassName("cardvalue")[0].innerHTML = "?";
+                            }
+                        }, 1000);
+                        
+                    
+                    }, 1000);
+                    
+                }
+            } else if (val == "c") {
+                // set a timeout to let the animations finish and change the card that was played by the opponent to ? with a value of 8
+                // grab the innerHtml of the card that was clciked on 
+                var scorediv = document.getElementsByClassName("score")[0];
+                scorediv.style.animation = "none";
+                // for (var i = 0; i < opponentcards.length; i++) {
+                //     opponentcards[i].style.animation = "none";
+                // }
+
+                var card = event.target.innerHTML;
+                card = parseInt(card);
+                // if the card isnt == 2, tell them to play the right card
+                if (card != 2) {
+                    alert("You must play the 2 card to continue the tutorial.");
+                    return;
+                } else {
+                    var opponentcards = document.getElementsByClassName("opponentcard");
+                    var opponentcard = opponentcards[Math.floor(Math.random() * opponentcards.length)];
+                    var opponentcardval = opponentcard.getElementsByClassName("cardvalue")[0].getAttribute("val");
+                    // now, call the flip animation on the opponent's card and change the innerHTML to the value of the card
+                    opponentcard.getElementsByClassName("cardvalue")[0].innerHTML = opponentcardval;
+                    opponentcard.style.animation = "flip 1s 1";
+                    // settimeout to let the animation finish
+                    setTimeout(function() {
+                        // since this is a guaranteed victory, give the player 1 point
+                        var pscore = localStorage.getItem("pscore");
+                        pscore = parseInt(pscore);
+                        pscore++;
+                        localStorage.setItem("pscore", pscore);
+                        // grab score div and change score
+                        var scorediv = document.getElementsByClassName("score")[0];
+                        scorediv.innerHTML = "Score: " + localStorage.getItem("pscore") + " - " + localStorage.getItem("oscore");
+                        // give the score div the score_up animation
+                        scorediv.style.animation = "score_up 2s 1";
+                        // change the round number
+                        var round_number = localStorage.getItem("round_number");
+                        round_number = parseInt(round_number);
+                        round_number++;
+                        localStorage.setItem("round_number", round_number);
+                        // change the round
+                        localStorage.setItem("round", "Higher");
+                        // change the round div
+                        var rounddiv = document.getElementsByClassName("currentround")[0];
+                        rounddiv.innerHTML = localStorage.getItem("name") + " has won the game!";
+                        // change the instruct div
+                        instruct.innerHTML = "Congratulations! You have completed the tutorial. You will soon be redirected.";
+                        // make the continue button visible
+                        
+                        // now change the val to "d"
+                        
+                        
+                        instruct.setAttribute("val", "d");
+                        
+                    
+                    }, 1000);
+            }
+            setTimeout(function() {
+                // change the opponent's card to ?
+                localStorage.setItem("tutorialcomplete", "true");
+                localStorage.setItem("level", 1);
+                window.location.href = "unlock.html";
+            }, 5000);
+        } else {
+            return;
+        }
+    }
+
+    </script>
+    <!-- ➢ -->
+    <body onload="onload()">
+        <div class="title2">Tutorial</div>
+        <!-- This is the pool table where all the game actions will occur -->
+        <div class="currentround">Follow Instructions to Continue</div>
+        <div class="score">Score: 0 - 0</div>
+        <div class="table_tutorial">
+            <div class="playercolumn">
+                YOU
+                <div class="playercard">
+                    <div onclick=play_card() id="card1" class="cardvalue" val="2">2</div>
+                </div>
+                <div class="playercard">
+                    <div onclick=play_card() id="card2" class="cardvalue" val="10">10</div>
+                </div>
+                <div class="playercard">
+                    <div onclick=play_card() id="card3" class="cardvalue" val="7">7</div>
+                </div>
+            </div>
+
+            <div class="opponentcolumn">
+                THEM
+                <div class="opponentcard">
+                    <div class="cardvalue" val="3">?</div>
+                </div>
+                <div class="opponentcard">
+                    <div class="cardvalue" val="4">?</div>
+                </div>
+                <div class="opponentcard">
+                    <div class="cardvalue" val="7">?</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="instruct" val="a">
+            Welcome to Higher or Lower! The goal of the game is to place the higher card
+            in a higher round, and a lower card in the lower round. Whoever has the higher
+            card during a higher round will win the round. Likewise, whoever has the lower
+            card during a lower round will win the round. This match is a best of 3, but the
+            non-tutorial matches will be a best of 5.
+            <div class="cont_instructions" onclick="cont_ins()">➤ CONTINUE</div>
+        </div>
+    </body>
+
+</html>

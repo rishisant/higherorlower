@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+    <head>  
+        <title>Higher or Lower Achievements</title>
+        <link rel="stylesheet" type="text/css" href="base.css">
+        <script src="script.js"></script>
+    </head>
+
+    <style>
+        .achievementcontainer {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ubtn {
+            width: 200px;
+            height: 50px;
+            background-color: #f2f2f2;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* margin-top: 50px; */
+            margin-top: 20px;
+            outline: 2px solid #f2f2f2;
+            color: #000;
+
+        }
+        .ubtn:hover {
+            cursor: pointer;
+            background-color: #000;
+            color: #f2f2f2;
+        }
+
+        .unlockedcard {
+            width: 200px;
+            height: 300px;
+            background-color: #f2f2f2;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px;
+            outline: 2px solid #f2f2f2;
+        }
+
+        #ghoney {
+            background-image: url("/src/img/goldenhoneycomb.png");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        #plantcard {
+            background-image: url("/src/img/plantcard.png");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        #scalycard {
+            background-image: url("/src/img/scalycard.png");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        #pagoda {
+            background-image: url("/src/img/pagodastyle.png");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        #egyptian {
+            background-image: url("/src/img/egyptianstyle.png");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .achcontainer {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ach {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            outline: 2px solid #f2f2f2;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+            margin-right: 20px;
+            min-width: 300px;
+            min-height: 600px;
+            background-color: #f2f2f2;
+        }
+
+        .achtitle {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 10px;
+            color: black;
+        }
+
+        .achdesc {
+            font-size: .8em;
+            margin-top: 10px;
+            color: black;
+            padding: 10px;
+        }
+
+        .achequip {
+            width: 200px;
+            height: 50px;
+            background-color: #f2f2f2;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            outline: 2px solid #f2f2f2;
+            color: #000;
+        }
+
+        .achequip:hover {
+            cursor: pointer;
+            background-color: #000;
+            color: #f2f2f2;
+        }
+
+        /*set returnhome in the middle of the page, it is a simple div*/
+        #returnhome {
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+
+    </style>
+    <!-- ➢ -->
+    <!-- 
+        Achievement Card
+        - Title
+        - Description
+        - Equip Button
+
+        Golden Honeycomb (Golden Honeycomb)
+        - Beat the game for the first time
+        - EQUIP
+
+        Friend of the Trees (Plant Card)
+        - Beat the game with the name "Crazy Dave"
+        - EQUIP
+
+        Reptilian Overlord (Scaly Card)
+        - Win a game 3-0
+        - EQUIP
+
+        Down to the Wire (Pagoda Style)
+        - Win the last level of the game 3-2
+        - EQUIP
+
+        The Ultimate Challenge (Egyptian Style)
+        - Win the last level of the game 3-0
+        - EQUIP
+
+     -->
+
+
+    <script>
+        //achievements: treefriend, imawinner, thedominator, downtothewire, ultchallenge
+        function onload() {
+            var ach1 = localStorage.getItem("imawinner");
+            var ach2 = localStorage.getItem("treefriend");
+            var ach3 = localStorage.getItem("thedominator");
+            var ach4 = localStorage.getItem("downtothewire");
+            var ach5 = localStorage.getItem("ultchallenge");
+
+            // check if all of the 5 achievements are true, if they are, then set visibility of id=ach_ + i to visible
+            // else, set display to none
+            if (ach1 == "true") {
+                var elem = document.getElementById("ach_1");
+                elem.style.visibility = "visible";
+            } else {
+                var elem = document.getElementById("ach_1");
+                elem.style.display = "none";
+            }
+            if (ach2 == "true") {
+                var elem = document.getElementById("ach_2");
+                elem.style.visibility = "visible";
+            } else {
+                var elem = document.getElementById("ach_2");
+                elem.style.display = "none";
+            }
+            if (ach3 == "true") {
+                var elem = document.getElementById("ach_3");
+                elem.style.visibility = "visible";
+            } else {
+                var elem = document.getElementById("ach_3");
+                elem.style.display = "none";
+            }
+            if (ach4 == "true") {
+                var elem = document.getElementById("ach_4");
+                elem.style.visibility = "visible";
+            } else {
+                var elem = document.getElementById("ach_4");
+                elem.style.display = "none";
+            }
+            if (ach5 == "true") {
+                var elem = document.getElementById("ach_5");
+                elem.style.visibility = "visible";
+            } else {
+                var elem = document.getElementById("ach_5");
+                elem.style.display = "none";
+            }
+            // if none are true, then display "no achievements unlocked"
+            if (ach1 != "true" && ach2 != "true" && ach3 != "true" && ach4 != "true" && ach5 != "true") {
+                var elem = document.getElementById("noachunlocked");
+                elem.style.visibility = "visible";
+            } else {
+                var elem = document.getElementById("noachunlocked");
+                elem.style.display = "none";
+                var elem2 = document.getElementByClassName("achcontainer")[0];
+                elem2.style.visibility = "visible";
+            }
+        }
+
+        function rethome() {
+            window.location.href = "index.html";
+        }
+
+        function equip(param) {
+            if (param==1) {
+                alert("Style: Golden Honeycomb Equipped!");
+                localStorage.setItem("style", "goldenhoneycomb");
+            } else if (param==2) {
+                alert("Style: Plant Card Equipped!");
+                localStorage.setItem("style", "plantcard");
+            } else if (param==3) {
+                alert("Style: Scaly Card Equipped!");
+                localStorage.setItem("style", "scalycard");
+            } else if (param==4) {
+                alert("Style: Pagoda Style Equipped!");
+                localStorage.setItem("style", "pagodastyle");
+            } else if (param==5) {
+                alert("Style: Egyptian Style Equipped!");
+                localStorage.setItem("style", "egyptianstyle");
+            }
+        }
+
+    </script>
+    <body onload="onload()">
+        <div class="title2">Unlocked Achievements</div>
+        <div id="noachunlocked" class="generalheader" style="margin-bottom: 30px">No achievements have been unlocked.</div>
+
+        <div class="achievementcontainer">
+
+            <div class="achcontainer" style="visibility: hidden">
+
+                <div class="ach" id="ach_1">
+                    <div class="unlockedcard" id="ghoney"></div>
+                    <div class="achtitle">I'm a Winner!</div>
+                    <div class="achdesc">Complete the game for the first time.</div>
+                    <div class="achequip" onclick="equip(1)">Equip Card Style</div>
+                </div>
+
+                <div class="ach" id="ach_2">
+                    <div class="unlockedcard" id="plantcard"></div>
+                    <div class="achtitle">Friend of the Trees</div>
+                    <div class="achdesc">Complete the game with the name "Crazy Dave".</div>
+                    <div class="achequip" onclick="equip(2)">Equip Card Style</div>
+                </div>
+
+                <div class="ach" id="ach_3">
+                    <div class="unlockedcard" id="scalycard"></div>
+                    <div class="achtitle">The Dominator</div>
+                    <div class="achdesc">Win a game 3-0.</div>
+                    <div class="achequip" onclick="equip(3)">Equip Card Style</div>
+                </div>
+
+                <div class="ach" id="ach_4">
+                    <div class="unlockedcard" id="pagoda"></div>
+                    <div class="achtitle">Down to the Wire</div>
+                    <div class="achdesc">Win the last level of the game 3-2.</div>
+                    <div class="achequip" onclick="equip(4)">Equip Card Style</div>
+                </div>
+
+                <div class="ach" id="ach_5">
+                    <div class="unlockedcard" id="egyptian"></div>
+                    <div class="achtitle">The Ultimate Challenge</div>
+                    <div class="achdesc">Win the last level of the game 3-0.</div>
+                    <div class="achequip" onclick="equip(5)">Equip Card Style</div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="returnhome" class="ubtn" onclick="rethome()" style="margin-top: 40px" >Return Home</div>
+        
+    </body>
+
+</html>

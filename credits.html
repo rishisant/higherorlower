@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+    <head>  
+        <title>Higher or Lower</title>
+        <link rel="stylesheet" type="text/css" href="base.css">
+        <script src="script.js"></script>
+    </head>
+
+    <script>
+        function onload() {
+            // localStorage.setItem("level", 1);
+            // hide the button "continue" if the player has not gotten to level 1
+            var currentlevel = localStorage.getItem("level");
+            if (parseInt(currentlevel) < 1) {
+                var continuebutton = document.getElementById("continue");
+                continuebutton.style.display = "none";
+            }
+        }
+
+    </script>
+
+    <style>
+        .pic {
+            width: 18%;
+            height: 18%;
+            border-radius: 20px;
+            outline: 2px solid black;
+            margin-top: 50px;
+            margin-left: 20px;
+        }
+
+        .creditscontainer {
+            /*flex row*/
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+        .creditstext {
+            background-color: aliceblue;
+            font-size: 15px;
+            font-family: Saira;
+            padding: 30px;
+            color: rgb(0, 0, 0);
+            border-radius: 20px;
+            outline: 2px solid black;
+            margin-top: 50px;
+            margin-left: 20px;
+            width: 40%;
+            text-align: left;
+        }
+    </style>
+    <!-- ➢ -->
+    <body onload="onload()">
+        <div class="title">Credits</div>
+        <div class="creditscontainer">
+            <img src="./src/img/picofme.jpeg" class="pic"></img>
+            <div class="creditstext">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                Hey there! My name's Rishi. I'm the creator of this game, and it was originally made for an Engineering school project.
+                I started making this game my freshman year, and the original version was around ~650-700 lines of code in Python.
+                However, I decided to remake the game in JavaScript, and add a nice user interface in order to make it more appealing.
+                
+                <br><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                Honestly, I made this game in two days, but I spent a lot of time thinking about how to make the game more unique; I decided
+                to add achievements, levels, and more customization. The original game was a bit boring; sure, you could beat four various
+                AI's, but you couldn't really do much else. There was a lack of replayability, and I wanted to fix that.
+
+                <br><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                I hope that you enjoyed the game as much as I enjoyed making it. I plan on updating the game every so often. And plus, I'll probably
+                get <i>wayyy</i> better at coding in the next couple of years (hopefully). Maybe I'll even make a sequel to this game, who knows?
+                For now, fellow gamer, I bid you farewell. 
+
+                <br><br>
+                <div style="text-align: right; font-size: 1.2em;">- R. Santhanam</div>
+            </div>
+
+            
+
+            
+        </div>
+
+        <script>
+            function onload() {
+                // localStorage.clear();
+                // if tamilcard is equipped, hide the button
+                var giftacquired = localStorage.getItem("giftretrieved");
+                if (giftacquired == "true") {
+                    var freegiftbutton = document.getElementById("freegift");
+                    freegiftbutton.style.visibility = "hidden";
+                } else {
+                    var freegiftbutton = document.getElementById("freegift");
+                    freegiftbutton.style.visibility = "visible";
+                }
+                
+            }
+            function freegift() {
+                // equip style tamilcard
+                localStorage.setItem("style", "tamilcard");
+                localStorage.setItem("giftretrieved", "true");
+                alert("Style: Tamil Style Equipped!");
+            }
+
+            function backhome() {
+                window.location.href = "index.html";
+            }
+        </script>
+
+        <div id="spacer" style="margin-bottom: 50px; font-size: 0px;">s</div>
+        <div class="mmenu_button" style="width: 10%; margin-left: auto; margin-right:auto;" id="back" onclick="backhome()">Back</div>
+        <div class="mmenu_button" id="freegift" style="width: 10%; margin-left: auto; margin-right:auto; margin-bottom: 50px" onclick="freegift()">Free Gift!</div>
+        
+    </body>
+
+</html>
