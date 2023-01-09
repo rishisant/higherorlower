@@ -68,8 +68,8 @@ body {
 .initcontainer {
     display: flex;
     flex-direction: row;
-    margin-left: 35%;
-    margin-right: 35%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /*
