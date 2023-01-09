@@ -68,8 +68,11 @@ body {
 .initcontainer {
     display: flex;
     flex-direction: row;
-    margin-left: auto;
-    margin-right: auto;
+    overflow: hidden;
+    position: absolute;
+    margin: 0 auto;
+    width: 100%;
+    justify-content: center;
 }
 
 /*
