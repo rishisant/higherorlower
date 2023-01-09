@@ -8,20 +8,12 @@
 
     <script>
         function onload() {
-            // localStorage.setItem("level", 1);
-            // hide the button "continue" if the player has not gotten to level 1
-            var currentlevel = localStorage.getItem("level");
-            if (parseInt(currentlevel) < 1) {
-                var continuebutton = document.getElementById("continue");
-                continuebutton.style.visibility = "none";
-            } else if (isNan(currentlevel)) {
-                // no display
-                var continuebutton = document.getElementById("continue");
-                continuebutton.style.visibility = "none";
+            if (localStorage.getItem("level") == null) {
+                document.getElementById("continue").style.display = "none";
+            } else if (parseInt(localStorage.getItem("level")) > 10) {
+                document.getElementById("continue").style.display = "none";
             } else {
-                // display
-                var continuebutton = document.getElementById("continue");
-                continuebutton.style.visibility = "visible";
+                document.getElementById("continue").style.display = "block";
             }
         }
 

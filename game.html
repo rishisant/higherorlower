@@ -8,39 +8,15 @@
     </head>
 
     <style>
-        @keyframes shake_rapidly {
+        @keyframes disappear {
             0% {
-                transform: translate(1px, 1px) rotate(0deg);
-            }
-            10% {
-                transform: translate(-1px, -2px) rotate(-1deg);
-            }
-            20% {
-                transform: translate(-3px, 0px) rotate(1deg);
-            }
-            30% {
-                transform: translate(3px, 2px) rotate(0deg);
+                transform: scale(1);
             }
             40% {
-                transform: translate(1px, -1px) rotate(1deg);
-            }
-            50% {
-                transform: translate(-1px, 2px) rotate(-1deg);
-            }
-            60% {
-                transform: translate(-3px, 1px) rotate(0deg);
-            }
-            70% {
-                transform: translate(3px, 1px) rotate(-1deg);
-            }
-            80% {
-                transform: translate(-1px, -1px) rotate(1deg);
-            }
-            90% {
-                transform: translate(1px, 2px) rotate(0deg);
+                transform: scale(0.3);
             }
             100% {
-                transform: translate(1px, -2px) rotate(-1deg);
+                transform: scale(0);
             }
         }
 
@@ -91,6 +67,16 @@
 
             }
         }
+
+        @keyframes change_round {
+            50% {
+                color: #69becb;
+                text-shadow: 0 0 10px #69becb, 0 0 20px #69becb, 0 0 30px #69becb, 0 0 40px #69becb, 0 0 50px #69becb, 0 0 60px #69becb, 0 0 70px #69becb;
+            }
+            100% {
+
+            }
+        }
     </style>
 
     <script>
@@ -99,29 +85,49 @@
         var isturn = false;
         var deck = [];
 
+        // for the round managing
+        var roundtypes = [];
+        var currentroundtype = "";
+        var roundno = 1;
+        var playerscore = 0;
+        var opponentscore = 0;
+
+        // for easy,med,hard mode
+        var easy_mode = false;
+        var medium_mode = false;
+        var hard_mode = false;
+        
+
         function onload() {
             // Change the level div to the level
             var level = localStorage.getItem("level");
             document.getElementById("curlvl").innerHTML = "Level " + level;
+
+            // If level is <= 3, easy mode
+            // If level is b/w 4 -> 8 medium mode
+            // If level is > 8 and <= 10 then hard mode
+            if (level <= 3) {
+                easy_mode = true;
+            } else if (level > 3 && level <= 8) {
+                medium_mode = true;
+            } else if (level > 8 && level <= 10) {
+                hard_mode = true;
+            }
+
             // Fill the deck with random cards from 1-10 with a total of 100 cards
             for (var i = 0; i < 100; i++) {
                 deck.push(Math.floor(Math.random() * 10) + 1);
             }
-            // console.log(deck);
-            // console.log("IS it the turn: " + isturn);
-            // First, grab the LEVEL ID
+            // Fill the round types with random (50% chance) of "Higher" or "Lower"
+            for (var i = 0; i < 100; i++) {
+                roundtypes.push(Math.floor(Math.random() * 2) == 0 ? "Higher" : "Lower");
+            }
             var level = localStorage.getItem("level");
-            // Now set localstorages such as "currentround", "roundtype" to default values
-            // 50% probability of roundtype => "Higher" and 50% probability of roundtype => "Lower"
-            var roundtype = Math.floor(Math.random() * 2) == 0 ? "Higher" : "Lower";
-            localStorage.setItem("currentround", 1);
-            localStorage.setItem("roundtype", roundtype);
-            // Set the player and opponent scores to 0 (pscore, oscore)
-            localStorage.setItem("pscore", 0);
-            localStorage.setItem("oscore", 0);
-            // Grab the current equipped cardstyle
+            currentroundtype = roundtypes.pop();
+            localStorage.setItem("roundtype", currentroundtype);
+            
+            // Grab styles
             var style = localStorage.getItem("style");
-            // Now, set the cardstyle to the player's equipped cardstyle (i.e. the background of div class playercard)
             var playercards = document.getElementsByClassName("playercard");
             for (var i = 0; i < playercards.length; i++) {
                 playercards[i].style.backgroundImage = "url('./src/img/" + style + ".png')";
@@ -130,51 +136,13 @@
                 playercards[i].style.backgroundRepeat = "no-repeat";
             }
             // Now, depending on the level, set the opponent's cardstyle
-            if (level == 1) {
-                // indiancard.png for opponent's cardstyle
-                var opponentcards = document.getElementsByClassName("opponentcard");
-                for (var i = 0; i < opponentcards.length; i++) {
-                    opponentcards[i].style.backgroundImage = "url('./src/img/indiancard.png')";
-                    opponentcards[i].style.backgroundSize = "cover";
-                    opponentcards[i].style.backgroundPosition = "center";
-                    opponentcards[i].style.backgroundRepeat = "no-repeat";
-                }
-            } else if (level == 2) {
-                // azteccard.png for opponent's cardstyle
-                var opponentcards = document.getElementsByClassName("opponentcard");
-                for (var i = 0; i < opponentcards.length; i++) {
-                    opponentcards[i].style.backgroundImage = "url('./src/img/azteccard.png')";
-                    opponentcards[i].style.backgroundSize = "cover";
-                    opponentcards[i].style.backgroundPosition = "center";
-                    opponentcards[i].style.backgroundRepeat = "no-repeat";
-                }
-            } else if (level == 3) {
-                // japanesecard.png for opponent's cardstyle
-                var opponentcards = document.getElementsByClassName("opponentcard");
-                for (var i = 0; i < opponentcards.length; i++) {
-                    opponentcards[i].style.backgroundImage = "url('./src/img/japanesecard.png')";
-                    opponentcards[i].style.backgroundSize = "cover";
-                    opponentcards[i].style.backgroundPosition = "center";
-                    opponentcards[i].style.backgroundRepeat = "no-repeat";
-                }
-            } else if (level == 4) {
-                // medievalcard.png for opponent's cardstyle
-                var opponentcards = document.getElementsByClassName("opponentcard");
-                for (var i = 0; i < opponentcards.length; i++) {
-                    opponentcards[i].style.backgroundImage = "url('./src/img/medievalcard.png')";
-                    opponentcards[i].style.backgroundSize = "cover";
-                    opponentcards[i].style.backgroundPosition = "center";
-                    opponentcards[i].style.backgroundRepeat = "no-repeat";
-                }
-            } else if (level == 5) {
-                // goldenhoneycomb.png for opponent's cardstyle
-                var opponentcards = document.getElementsByClassName("opponentcard");
-                for (var i = 0; i < opponentcards.length; i++) {
-                    opponentcards[i].style.backgroundImage = "url('./src/img/goldenhoneycomb.png')";
-                    opponentcards[i].style.backgroundSize = "cover";
-                    opponentcards[i].style.backgroundPosition = "center";
-                    opponentcards[i].style.backgroundRepeat = "no-repeat";
-                }
+            oppcardstyle = ["indiancard.png", "azteccard.png", "furcard.png", "japanesecard.png", "oldschoolcard.png", "medievalcard.png", "porcelaincard.png", "redyarn.png", "royalcard.png", "goldenhoneycomb.png"]
+            var opponentcards = document.getElementsByClassName("opponentcard");
+            for (var i = 0; i < opponentcards.length; ++i) {
+                opponentcards[i].style.backgroundImage = "url('./src/img/" + oppcardstyle[level - 1] + "')";
+                opponentcards[i].style.backgroundSize = "cover";
+                opponentcards[i].style.backgroundPosition = "center";
+                opponentcards[i].style.backgroundRepeat = "no-repeat";
             }
 
             // Now, generate a set of random values for the player's cards
@@ -183,17 +151,20 @@
             for (var i = 0; i < 3; i++) {
                 playercard_values.push(Math.floor(Math.random() * 10) + 1);
             }
+
             // In the playercolumn, set the values of the playercards by adding three divs with class cardvalue
             // The values of the cards are stored in the array playercard_values
             var playercards = document.getElementsByClassName("playercard");
             for (var i = 0; i < playercards.length; i++) {
-                playercards[i].innerHTML = "<div onclick=play_card() id='card" + (i + 1) + "' class='cardvalue' val='" + playercard_values[i] + "'>" + playercard_values[i] + "</div>";
+                playercards[i].innerHTML = "<div onclick=play_card() id='pcard" + (i + 1) + "' class='cardvalue' val='" + playercard_values[i] + "'>" + playercard_values[i] + "</div>";
             }
+
             // Now, generate a random value for the opponent's cards
             // The cards range from 1-10, inclusive. The values are stored in an array
             for (var i = 0; i < 3; i++) {
                 opponentcard_values.push(Math.floor(Math.random() * 10) + 1);
             }
+
             // In the opponentcolumn, set the values of the opponentcards by adding three divs with class cardvalue
             // The values of the cards are stored in the array opponentcard_values
             var opponentcards = document.getElementsByClassName("opponentcard");
@@ -208,6 +179,8 @@
             //     console.log("Player card " + (i + 1) + ": " + playercard_values[i]);
             //     console.log("Opponent card " + (i + 1) + ": " + opponentcard_values[i]);
             // }
+
+            var roundtype = localStorage.getItem("roundtype");
 
             // Now, set the current round to either higher or lower based on roundtype LCL var
             if (roundtype == "Higher") {
@@ -238,474 +211,425 @@
         }
 
         function play_card() {
-            // alert("hi");
-            let easy_mode = false;
-            let medium_mode = false;
-            let hard_mode = false; 
+            // Check if a turn is do-able
+            if (!isturn) {
+                return;
+            }
 
-            if (!isturn) return; // if it is not turn yet, return
-            // now, set the turn to false
-            isturn = false; // so the player has to wait for the opponent to play
+            // Now, since the computations will take place, set isturn to false
+            isturn = false;
+
+            // Grab the card that was clicked on
             var card = event.target;
-            var cardval = card.getAttribute("val");
+            var cardval = parseInt(card.getAttribute("val"));
 
-            // Now, check what the type of round is
-            // Grab from lclstorage var
+            // For debug
+            // console.log("DEBUG\nThe card's value that was clicked on is " + cardval + "\n");
+
+            // Now, check the current round type. Set the next round type to the .pop() of roundtypes
             var roundtype = localStorage.getItem("roundtype");
+            // console.log("DEBUG\nThe round is currently " + roundtype + " round.\n")
 
             // Gather the card that the opponent will play
-            // The AI for the first 2 levels will simply play the card with the highest value in a higher round and the lowest value in a lower round
-            // In the next few levels, the AI will be able to cheat and read the player's current card values, and play accordingly
-            var level = localStorage.getItem("level");
-            level = parseInt(level);
-            // set levels 1-2 to easy mode, 3-4 medium, 5 hard
-            // for now, everything is easy_mode
-            if (level == 1 || level == 2) {
-                easy_mode = true;
-                // console.log("DEBUG: Easy mode")
-            } else if (level == 3 || level == 4) {
-                easy_mode = true;
-                // medium_mode = true;
-                // console.log("DEBUG: Medium mode")
-            } else if (level == 5) {
-                // hard_mode = true;
-                easy_mode = true;
-                // console.log("DEBUG: Hard mode")
-            }
-
-            // Now, let's just simply work on the easy AI
+            // If easy_mode, will check the player's card value and if the round is higher, 50% chance of max value, otherwise just a random card
+            let opponent_choice; // the ACTUAL div that was chosen
+            let opponent_choice_index; // the index within the array of opponent values
+            let opponent_choice_val; // the value of the opponent's chosen card
             if (easy_mode) {
-                // console.log("Asserting for EASY AI: ---->");
-                // console.log("The AI's deck is: " + opponentcard_values);
-                // Grab the opponentcard_values array, check for max value if higher round and lowest value if lower round
-                // Since it is a global variable, we can access it from anywhere
-                var opponent_array = opponentcard_values;
-                var opponent_card = 0;
-                // Grab the index of the card that the opponent will play alongside its value
-                var opponent_card_index = 0;
-                var opponent_card_value = 0;
+                var trytowin = Math.floor(Math.random() * 2);
+                if (roundtype == "Higher") {
+                    if (trytowin == 1) {
+                        // Grab the max value in the array
+                        opponent_choice_val = Math.max.apply(null, opponentcard_values);
+                        // Grab the index of the max value
+                        opponent_choice_index = opponentcard_values.indexOf(opponent_choice_val);
+                        // Grab the actual div
+                        opponent_choice = document.getElementById("card" + (opponent_choice_index + 1));
+                    } else {
+                        // Grab a random card
+                        opponent_choice_index = Math.floor(Math.random() * 3);
+                        opponent_choice_val = opponentcard_values[opponent_choice_index];
+                        opponent_choice = document.getElementById("card" + (opponent_choice_index + 1));
+                    }
+                } else if (roundtype == "Lower") {
+                    if (trytowin == 1) {
+                        // Grab the min value in the array
+                        opponent_choice_val = Math.min.apply(null, opponentcard_values);
+                        // Grab the index of the min value
+                        opponent_choice_index = opponentcard_values.indexOf(opponent_choice_val);
+                        // Grab the actual div
+                        opponent_choice = document.getElementById("card" + (opponent_choice_index + 1));
+                    } else {
+                        // Grab a random card
+                        opponent_choice_index = Math.floor(Math.random() * 3);
+                        opponent_choice_val = opponentcard_values[opponent_choice_index];
+                        opponent_choice = document.getElementById("card" + (opponent_choice_index + 1));
+                    }
+                }
+            } else if (medium_mode) {
                 if (roundtype == "Higher") {
                     // Grab the max value in the array
-                    opponent_card_value = Math.max.apply(null, opponent_array);
+                    opponent_choice_val = Math.max.apply(null, opponentcard_values);
                     // Grab the index of the max value
-                    opponent_card_index = opponent_array.indexOf(opponent_card_value);
-                    // Grab the card that the opponent will play
-                    opponent_card = document.getElementsByClassName("opponentcard")[opponent_card_index];
+                    opponent_choice_index = opponentcard_values.indexOf(opponent_choice_val);
+                    // Grab the actual div
+                    opponent_choice = document.getElementById("card" + (opponent_choice_index + 1));
                 } else if (roundtype == "Lower") {
                     // Grab the min value in the array
-                    opponent_card_value = Math.min.apply(null, opponent_array);
+                    opponent_choice_val = Math.min.apply(null, opponentcard_values);
                     // Grab the index of the min value
-                    opponent_card_index = opponent_array.indexOf(opponent_card_value);
-                    // Grab the card that the opponent will play
-                    opponent_card = document.getElementsByClassName("opponentcard")[opponent_card_index];
+                    opponent_choice_index = opponentcard_values.indexOf(opponent_choice_val);
+                    // Grab the actual div
+                    opponent_choice = document.getElementById("card" + (opponent_choice_index + 1));
                 }
-
-                console.log("The player played: " + cardval + " and the opponent played: " + opponent_card_value + " in a " + roundtype + " round.")
-                console.log("The opponents current deck is " + opponent_array + " and the index of the card that the opponent will play is " + opponent_card_index + ".")
-
+            } else if (hard_mode) {
+                // In hard mode, will have a 50% chance of looking for any card that is higher than the player's choice in a higher round or choosing the max card, in lower rounds has a 50% chance of looking for cards lower or choosing lowest card
+                let be_greedy = Math.floor(Math.random() * 2);
                 if (roundtype == "Higher") {
-                    var winround = false; // player wins round
-                    var tie = false;
-                    if (cardval > opponent_card_value) {
-                        winround = true;
-                    } else if (cardval == opponent_card_value) {
-                        winround = false;
-                        tie = true;
+                    // Check if be_greedy == 1
+                    if (be_greedy == 1) {
+                        var playerval = cardval; // The card value of the player's chosen card
+                        // Look through array of opponent cards to find the minimum value that is higher than the player's card
+                        var mincard = opponentcard_values[0];
+                        for (let i = 0; i < opponentcard_values.length; ++i) {
+                            if (opponentcard_values[i] > playerval && opponentcard_values[i] < mincard) {
+                                mincard = opponentcard_values[i];
+                            }
+                        }
+                        // Grab the index and div
+                        opponent_choice_index = opponentcard_values.indexOf(mincard);
+                        opponent_choice_val = opponentcard_values[opponent_choice_index];
+                        opponent_choice = document.getElementById("card" + (opponent_choice_index + 1));
                     } else {
-                        winround = false;
+                        // Look for max card
+                        // Grab the max value in the array
+                        opponent_choice_val = Math.max.apply(null, opponentcard_values);
+                        // Grab the index of the max value
+                        opponent_choice_index = opponentcard_values.indexOf(opponent_choice_val);
+                        // Grab the actual div
+                        opponent_choice = document.getElementById("card" + (opponent_choice_index + 1));
                     }
-
-                    // First, apply the animation flip to the opponent card that was chosen
-                    opponent_card.style.animation = "none";
-                    opponent_card.style.animation = "flip 2s 1";
-                    // Now, change the opponent's card innerHTML to the value of the card
-                    opponent_card.innerHTML = opponent_card_value;
-                    // Set a timeout to wait for the animation to finish
-                    setTimeout(function() {
-                        if (winround) {
-                            // alert("block1");
-                            // alert("You won the round!");
-                            // grab lclstrg pscore and oscore
-                            var pscore = localStorage.getItem("pscore");
-                            var oscore = localStorage.getItem("oscore");
-                            // increment pscore by 1
-                            pscore = parseInt(pscore);
-                            pscore += 1;
-                            // set lclstrg pscore to pscore
-                            localStorage.setItem("pscore", pscore);
-                            // change the roundtype with a 50% chance of either higher or lower
-                            var roundtype = Math.floor(Math.random() * 2) == 0 ? "Higher" : "Lower";
-                            // set lclstrg roundtype to roundtype
-                            localStorage.setItem("roundtype", roundtype);
-
-                            // now, grab the score and apply 
-                            document.getElementsByClassName("score")[0].innerHTML = "Score: " + pscore + " - " + oscore;
-                            // add the score_up 1s 1 animation to the score
-                            document.getElementsByClassName("score")[0].style.animation = "score_up 1s 1";
-                            // set the roundtype
-                            document.getElementsByClassName("currentround")[0].innerHTML = "Current Round: " + roundtype;
-                            // settimeout to wait for animation to finish
-                            setTimeout(function() {
-                                // remove the animation
-                                document.getElementsByClassName("score")[0].style.animation = "none";
-                                
-                                // now, let the player be able to play
-                                isturn = true;
-                                // if the player has won 3 rounds, the game is over. apply shake_rapidly 2s 1 animation to the table
-                                // level++, set lclstrg level to level, set lclstrg pscore and oscore to 0, set lclstrg roundtype to NULL
-                                // settimeout to wait for animation to finish, but add 500ms more and go to unlock.html
-                                var tablediv = document.getElementsByClassName("table")[0];
-                                if (pscore == 3) {
-                                    // first ach: imawinner
-                                    if (level == 5) {
-                                        if (localStorage.getItem("name") == "Crazy Dave") {
-                                            alert("Achievement Unlocked: Friend of the Trees");
-                                            localStorage.setItem("treefriend", "true");
-                                        } else {
-                                            // do nothing
-                                        }
-                                        if (localStorage.getItem("imawinner") == "true") {
-                                            // do nothing
-                                        } else {
-                                            localStorage.setItem("imawinner", "true");
-                                            alert("Achievement Unlocked: I'm a Winner")
-                                        }
-                                    }
-                                    /*now achievements*/
-                                    /*first ach: 3-0 : thedominator*/
-                                    if (oscore==0 && pscore==3) {
-                                        if (localStorage.getItem("thedominator")=="true") {
-                                            // do nothing
-                                        } else {
-                                            localStorage.setItem("thedominator", "true");
-                                            alert("Achievement Unlocked: The Dominator")
-                                            // if last level : then ultchallenge = true
-                                            if (level==5) {
-                                                if (localStorage.getItem("ultchallenge")=="true"){
-                                                    // do nothing
-                                                } else {
-                                                    localStorage.setItem("ultchallenge", "true");
-                                                    alert("Achievement Unlocked: Ultimate Challenge")
-                                                }
-                                            }
-                                        }
-                                    } else if (oscore==2 && pscore==3) {
-                                        // achievement: down to the wire
-                                        if (localStorage.getItem("downtothewire")=="true") {
-                                            // do nothing
-                                        } else {
-                                            localStorage.setItem("downtothewire", "true");
-                                            alert("Achievement Unlocked: Down to the Wire")
-                                        }
-                                    }
-                                    tablediv.style.animation = "shake_rapidly 2s 1";
-                                    setTimeout(function() {
-                                        // increment level
-                                        level += 1;
-                                        // set lclstrg level to level
-                                        localStorage.setItem("level", level);
-                                        // set lclstrg pscore and oscore to 0
-                                        localStorage.setItem("pscore", 0);
-                                        localStorage.setItem("oscore", 0);
-                                        // set lclstrg roundtype to NULL
-                                        localStorage.setItem("roundtype", "NULL");
-                                        // go to unlock.html
-                                        window.location.href = "unlock.html";
-                                    }, 2500);
-                                } else {
-                                    var player_array = playercard_values;
-                                    var player_card = card;
-                                    var player_card_index = player_array.indexOf(parseInt(player_card.getAttribute("val")));
-                                    var new_card = deck.pop();
-                                    player_card.setAttribute("val", new_card);
-                                    player_card.innerHTML = new_card;
-
-                                    // Same for the opponent
-                                    var opponent_card = document.getElementsByClassName("opponentcard")[opponent_card_index];
-                                    var new_card = deck.pop();
-                                    opponent_card.setAttribute("val", new_card);
-                                    opponent_card.innerHTML = "?";
-                                    opponentcard_values[opponent_card_index] = new_card;
-                                }
-
-                            }, 2000);
-
-                        } else if (tie && !winround) {
-                            // alert("block2");
-                            // alert("You tied!");
-                            // change roundtype with a 50% chance of either higher or lower
-                            var roundtype = Math.floor(Math.random() * 2) == 0 ? "Higher" : "Lower";
-                            // set lclstrg roundtype to roundtype
-                            localStorage.setItem("roundtype", roundtype);
-                            // apply the tie_score animation to score[0]
-                            document.getElementsByClassName("score")[0].style.animation = "tie_score 1s 1";
-                            // settimeout to wait for animation to finish
-                            // set the roundtype
-                            document.getElementsByClassName("currentround")[0].innerHTML = "Current Round: " + roundtype;
-                            setTimeout(function() {
-                                // remove the animation
-                                document.getElementsByClassName("score")[0].style.animation = "none";
-                                
-                                // now, let the player be able to play
-                                isturn = true;
-                                var player_array = playercard_values;
-                                var player_card = card;
-                                var player_card_index = player_array.indexOf(parseInt(player_card.getAttribute("val")));
-                                var new_card = deck.pop();
-                                player_card.setAttribute("val", new_card);
-                                player_card.innerHTML = new_card;
-
-                                // Same for the opponent
-                                var opponent_card = document.getElementsByClassName("opponentcard")[opponent_card_index];
-                                var new_card = deck.pop();
-                                opponent_card.setAttribute("val", new_card);
-                                opponent_card.innerHTML = "?";
-                                // change the array of opponent card values
-                                opponentcard_values[opponent_card_index] = new_card;
-                                
-                            }, 2000);
-                        }
-
-                        else {
-                            // alert("block3");
-                            // alert("You lost the round!");
-                            // oscore ++ 
-                            var pscore = localStorage.getItem("pscore");
-                            var oscore = localStorage.getItem("oscore");
-                            // increment oscore by 1
-                            oscore = parseInt(oscore);
-                            oscore += 1;
-                            // set lclstrg oscore to oscore
-                            localStorage.setItem("oscore", oscore);
-                            // change the roundtype with a 50% chance of either higher or lower
-                            var roundtype = Math.floor(Math.random() * 2) == 0 ? "Higher" : "Lower";
-                            // set lclstrg roundtype to roundtype
-                            localStorage.setItem("roundtype", roundtype);
-                            // set the roundtype
-                            document.getElementsByClassName("currentround")[0].innerHTML = "Current Round: " + roundtype;
-                            // apply score_down 1s 1 animation to score[0]
-                            document.getElementsByClassName("score")[0].style.animation = "score_down 1s 1";
-                            document.getElementsByClassName("score")[0].innerHTML = "Score: " + pscore + " - " + oscore;
-                            // settimeout to wait for animation to finish
-                            setTimeout(function() {
-                                //  remove animation
-                                document.getElementsByClassName("score")[0].style.animation = "none";
-                                
-                                // now, let the player be able to play
-                                isturn = true;
-                                // if the player has lost 3 rounds, the game is over. apply shake_rapidly 2s 1 animation to the table
-                                if (oscore == 3) {
-                                    // apply shake_rapidly 2s 1 animation to the table
-                                    document.getElementsByClassName("table")[0].style.animation = "shake_rapidly 2s 1";
-                                    // settimeout to wait for animation to finish, but add 500ms more and go to unlock.html
-                                    setTimeout(function() {
-                                        // set lclstrg pscore and oscore to 0
-                                        localStorage.setItem("pscore", 0);
-                                        localStorage.setItem("oscore", 0);
-                                        // set lclstrg roundtype to NULL
-                                        localStorage.setItem("roundtype", "NULL");
-                                        // go to unlock.html
-                                        alert("You lost! However you can continue playing! Please press the continue button on the main menu.");
-                                        window.location.href = "index.html";
-                                    }, 2500);
-                                } else {
-                                    var player_array = playercard_values;
-                                    var player_card = card;
-                                    var player_card_index = player_array.indexOf(parseInt(player_card.getAttribute("val")));
-                                    var new_card = deck.pop();
-                                    player_card.setAttribute("val", new_card);
-                                    player_card.innerHTML = new_card;
-
-                                    // Same for the opponent
-                                    var opponent_card = document.getElementsByClassName("opponentcard")[opponent_card_index];
-                                    var new_card = deck.pop();
-                                    opponent_card.setAttribute("val", new_card);
-                                    opponent_card.innerHTML = "?";
-                                    // change the array of opponent card values
-                                    opponentcard_values[opponent_card_index] = new_card;
-                                }
-                            }, 2000);
-                        }
-                    })
                 } else if (roundtype == "Lower") {
-                    var winround = false;
-                    var tie = false;
-                    // if the card value is lower than opponent's card value, winround = true
-                    if (cardval < opponent_card_value) {
-                        winround = true;
-                    } else if (cardval == opponent_card_value) {
-                        tie = true;
+                    // Check if be_greedy == 1
+                    if (be_greedy == 1) {
+                        var playerval = cardval; // The card value of the player's chosen card
+                        // Look through array of opponent cards to find the maximum value that is lower than the player's card
+                        var maxcard = opponentcard_values[0];
+                        for (let i = 0; i < opponentcard_values.length; ++i) {
+                            if (opponentcard_values[i] < playerval && opponentcard_values[i] > maxcard) {
+                                maxcard = opponentcard_values[i];
+                            }
+                        }
+                        // Grab the index and div
+                        opponent_choice_index = opponentcard_values.indexOf(maxcard);
+                        opponent_choice_val = opponentcard_values[opponent_choice_index];
+                        opponent_choice = document.getElementById("card" + (opponent_choice_index + 1));
                     } else {
-                        winround = false;
+                        // Look for min card
+                        // Grab the min value in the array
+                        opponent_choice_val = Math.min.apply(null, opponentcard_values);
+                        // Grab the index of the min value
+                        opponent_choice_index = opponentcard_values.indexOf(opponent_choice_val);
+                        // Grab the actual div
+                        opponent_choice = document.getElementById("card" + (opponent_choice_index + 1));
                     }
+                }
+            }
 
-                    // First, apply the animation flip to the opponent card that was chosen
-                    opponent_card.style.animation = "none";
-                    opponent_card.style.animation = "flip 2s 1";
-                    // Now, change the opponent's card innerHTML to the value of the card
-                    opponent_card.innerHTML = opponent_card_value;
+            // console.log("DEBUG____________");
+            // console.log("The player played the card: " + cardval);
+            // console.log("The opponent played the card: " + opponent_choice_val);
+            // console.log("The round type is : " + roundtype);
+
+            // Now, we need to check if the player won or lost
+            if (roundtype == "Higher") {
+                var winround = false;
+                var tie = false;
+                if (cardval > opponent_choice_val) {
+                    winround = true;
+                } else if (cardval == opponent_choice_val) {
+                    tie = true;
+                } else {
+                    winround = false;
+                }
+            } else if (roundtype == "Lower") {
+                var winround = false;
+                var tie = false;
+                if (cardval < opponent_choice_val) {
+                    winround = true;
+                } else if (cardval == opponent_choice_val) {
+                    tie = true;
+                } else {
+                    winround = false;
+                }
+            }
+
+            // For the divs
+            var scorediv = document.getElementsByClassName("score")[0];
+            var roundtypediv = document.getElementsByClassName("currentround")[0];
+
+            // Reveal the opponent's card with a flip animation
+
+            // Now, we must play the animations as follows and setTimeouts to let them finish
+            if (winround) {
+                playerscore++;
+                roundno++;
+                if (playerscore >= 3) {
+                    // Insert code here for match determining
+                    var lclname = localStorage.getItem("name");
+                    var level = parseInt(localStorage.getItem("level"));
+                    var tablediv = document.getElementsByClassName("table")[0];
+                    roundtypediv.innerHTML = lclname + " has won the match!";
+
+                    // Change score div
+                    scorediv.innerHTML = "Score: " + playerscore + " - " + opponentscore;
+
+                    // Apply tablediv animation "disappear" 3s 1
+                    tablediv.style.animation = "disappear 3s 1";
+
+                    // Let animations finish
+                    setTimeout(function() {
+                        tablediv.style.animation = "none";
+
+                        // Check for Achievements & Increment Level
+                        if (playerscore == 3 && opponentscore == 0) {
+                        // The dominator achievement
+                        var beat_dominator = localStorage.getItem("thedominator");
+                        if (beat_dominator != "true") {
+                            localStorage.setItem("thedominator", "true");
+                            alert("Achievement unlocked: The Dominator! Equip the prize by going to the main menu and clicking on the Achievements button.");
+                        }
+                        
+                            // Check if lvl == 10
+                            if (level == 10) {
+                                // If the game hasn't been beaten yet, award the user "imawinner" && "ultchallenge"
+                                var beat_once = localStorage.getItem("imawinner");
+                                if (beat_once != "true") {
+                                    localStorage.setItem("imawinner", "true");
+                                    alert("Achievement unlocked: I'm a Winner! Equip the prize by going to the main menu and clicking on the Achievements button.");
+                                }
+
+                                var beat_ult = localStorage.getItem("ultchallenge");
+                                if (beat_ult != "true") {
+                                    localStorage.setItem("ultchallenge", "true");
+                                    alert("Achievement unlocked: The Ultimate Challenge! Equip the prize by going to the main menu and clicking on the Achievements button.");
+                                }
+
+                                var beat_dave = localStorage.getItem("treefriend");
+                                if (beat_dave != "true" && lclname == "Crazy Dave") {
+                                    localStorage.setItem("treefriend", "true");
+                                    alert("Achievement unlocked: Friend of the Trees! Equip the prize by going to the main menu and clicking on the Achievements button.");
+                                }
+                            }
+
+                        } else if (playerscore == 3 && opponentscore == 2) {
+                            // Downtothewire achievement
+                            var beat_downtowire = localStorage.getItem("downtothewire");
+                            if (beat_downtowire != "true") {
+                                localStorage.setItem("downtothewire", "true");
+                                alert("Achievement unlocked: Down to the Wire! Equip the prize by going to the main menu and clicking on the Achievements button.");
+                            }
+                        }
+
+                        // Increment level
+                        var newlvl = parseInt(localStorage.getItem("level")) + 1;
+                        localStorage.setItem("level", newlvl);
+                        
+                        // Relocate to unlock.html UNLESS level == 11, otherwise go back to Index.html
+                        if (newlvl == 11) {
+                            // Check for treefriend && imawinner
+                            var beat_dave = localStorage.getItem("treefriend");
+                            var beat_once = localStorage.getItem("imawinner");
+                            if (beat_dave != "true" && lclname == "Crazy Dave") {
+                                localStorage.setItem("treefriend", "true");
+                                alert("Achievement unlocked: Friend of the Trees! Equip the prize by going to the main menu and clicking on the Achievements button.");
+                            }
+                            if (beat_once != "true") {
+                                localStorage.setItem("imawinner", "true");
+                                alert("Achievement unlocked: I'm a Winner! Equip the prize by going to the main menu and clicking on the Achievements button.");
+                            }
+                            window.location.replace("index.html");
+                        } else {
+                            window.location.replace("unlock.html");
+                        }
+
+                    }, 3000);
+                }             
+
+                // Add the animations to the score divs and the next round divs
+                scorediv.innerHTML = "Score: " + playerscore + " - " + opponentscore;
+                scorediv.style.animation = "score_up 1.5s 1";
+                
+                // Change the roundtype 
+                var nextroundtype = roundtypes.pop();
+                roundtypediv.innerHTML = "Current Round: " + nextroundtype;
+                localStorage.setItem("roundtype", nextroundtype);
+                roundtypediv.style.animation = "change_round 1.5s 1";
+
+                // Flip the opponent's card (apply flip 1.5s 1)
+                var ocard = document.getElementsByClassName("opponentcard")[opponent_choice_index];
+                ocard.style.animation = "flip 1.5s 1";
+                ocard.innerHTML = opponent_choice_val;
+
+                // SetTimeout for animations to finish and set to none
+                setTimeout(function() {
+                    scorediv.style.animation = "none";
+                    roundtypediv.style.animation = "none";
+                    ocard.style.animation = "none";
+                    ocard.innerHTML = "?";
+                    isturn = true;
+
+                    // Now, grabbing the playercard that was played, remove it from the deck
+                    var player_array = playercard_values;
+                    var playerchoice_index = player_array.indexOf(cardval);
+                    var new_card = deck.pop();
+                    card.setAttribute("val", new_card);
+                    card.innerHTML = new_card;
+
+                    // console.log("DEBUG: giving new card values (" + new_card + ") TO PLAYER");
+
+                    // Same for the opponent
+                    var opponent_array = opponentcard_values;
+                    var opponentchoice_index = opponent_array.indexOf(opponent_choice_val);
+                    new_card = deck.pop();
+                    opponent_choice.setAttribute("val", new_card);
+                    opponent_choice.innerHTML = "?";
+
+                    opponent_array[opponent_choice_index] = new_card; // Change the array
+
+                    // console.log("DEBUG: giving new card values (" + new_card + ") TO OPPONENT");
+
+                    // Break out
+                    setTimeout(function() {
+                        return;
+                    }, 100);
+
+                }, 1500);
+
+            } else if (tie) {
+                roundno++;
+                
+                // Add the animations to the score divs and the next round divs
+                scorediv.innerHTML = "Score: " + playerscore + " - " + opponentscore;
+                scorediv.style.animation = "tie_score 1.5s 1";
+                
+                // Change the roundtype
+                var nextroundtype = roundtypes.pop();
+                roundtypediv.innerHTML = "Current Round: " + nextroundtype;
+                localStorage.setItem("roundtype", nextroundtype);
+                roundtypediv.style.animation = "change_round 1.5s 1";
+
+                // Flip the opponent's card (apply flip 1.5s 1)
+                var ocard = document.getElementsByClassName("opponentcard")[opponent_choice_index];
+                ocard.style.animation = "flip 1.5s 1";
+                ocard.innerHTML = opponent_choice_val;
+
+                // SetTimeout
+                setTimeout(function() {
+                    scorediv.style.animation = "none";
+                    roundtypediv.style.animation = "none";
+                    ocard.style.animation = "none";
+                    ocard.innerHTML = "?";
+                    isturn = true;
+
+                    // Now, grabbing the playercard that was played, remove it from the deck
+                    var player_array = playercard_values;
+                    var playerchoice_index = player_array.indexOf(cardval);
+                    var new_card = deck.pop();
+                    card.setAttribute("val", new_card);
+                    card.innerHTML = new_card;
+
+                    // console.log("DEBUG: giving new card values (" + new_card + ") TO PLAYER");
+
+                    // Same for the opponent
+                    var opponent_array = opponentcard_values;
+                    var opponentchoice_index = opponent_array.indexOf(opponent_choice_val);
+                    new_card = deck.pop();
+                    opponent_choice.setAttribute("val", new_card);
+                    opponent_choice.innerHTML = "?";
+
+                    opponent_array[opponent_choice_index] = new_card; // Change the array
+
+                    // console.log("DEBUG: giving new card values (" + new_card + ") TO OPPONENT");
+
+                    // Break out
+                    setTimeout(function() {
+                        return;
+                    }, 100);
+                }, 1500);
+
+            } else if (!winround) {
+                opponentscore++;
+                roundno++;
+                if (opponentscore >= 3) {
+                    // Insert code here for match determining
+                    var lclname = localStorage.getItem("name");
+                    var tablediv = document.getElementsByClassName("table")[0];
+                    roundtypediv.innerHTML = lclname + " has lost the match!";
+
+                    // Change score div
+                    scorediv.innerHTML = "Score: " + playerscore + " - " + opponentscore;
+
+                    // Apply tablediv animation "disappear" 3s 1
+                    tablediv.style.animation = "disappear 3s 1";
 
                     setTimeout(function() {
-                        // if winround
-                        if (winround) {
-                            // alert("block4");
-                            // alert("You won the round!");
-                            // pscore ++
-                            var pscore = localStorage.getItem("pscore");
-                            var oscore = localStorage.getItem("oscore");
-                            // increment pscore by 1
-                            pscore = parseInt(pscore);
-                            pscore += 1;
-                            // set lclstrg pscore to pscore
-                            localStorage.setItem("pscore", pscore);
-                            // apply score_up 1s 1 animation to score[0]
-                            document.getElementsByClassName("score")[0].style.animation = "score_up 1s 1";
-                            document.getElementsByClassName("score")[0].innerHTML = "Score: " + pscore + " - " + oscore;
-                            var roundtype = Math.floor(Math.random() * 2) == 0 ? "Higher" : "Lower";
-                            // set the roundtype
-                            document.getElementsByClassName("currentround")[0].innerHTML = "Current Round: " + roundtype;
-                            // settimeout to wait for animation to finish
-                            setTimeout(function() {
-                                // remove animation
-                                document.getElementsByClassName("score")[0].style.animation = "none";
-                                // now, let the player be able to play
-                                isturn = true;
-                                // if the player has won 3 rounds, the game is over. apply shake_rapidly 2s 1 animation to the table
-                                if (pscore == 3) {
-                                    // apply shake_rapidly 2s 1 animation to the table
-                                    document.getElementsByClassName("table")[0].style.animation = "shake_rapidly 2s 1";
-                                    // settimeout to wait for animation to finish, but add 500ms more and go to unlock.html
-                                    setTimeout(function() {
-                                        // increment level
-                                        level += 1;
-                                        // set lclstrg level to level
-                                        localStorage.setItem("level", level);
-                                        // set lclstrg pscore and oscore to 0
-                                        localStorage.setItem("pscore", 0);
-                                        localStorage.setItem("oscore", 0);
-                                        // set lclstrg roundtype to NULL
-                                        localStorage.setItem("roundtype", "NULL");
-                                        // go to unlock.html
-                                        window.location.href = "unlock.html";
-                                    }, 2500);
-                                } else {
-                                    var player_array = playercard_values;
-                                    var player_card = card;
-                                    var player_card_index = player_array.indexOf(parseInt(player_card.getAttribute("val")));
-                                    var new_card = deck.pop();
-                                    player_card.setAttribute("val", new_card);
-                                    player_card.innerHTML = new_card;
 
-                                   // Same for the opponent
-                                    var opponent_card = document.getElementsByClassName("opponentcard")[opponent_card_index];
-                                    var new_card = deck.pop();
-                                    opponent_card.setAttribute("val", new_card);
-                                    opponent_card.innerHTML = "?";
-                                    // change the array of opponent card values
-                                    opponentcard_values[opponent_card_index] = new_card;
-                                }
+                        tablediv.style.animation = "none";
+                        window.location.replace("levelselect.html")
 
-                            }, 2000);
-
-                        } else if (tie && !winround) {
-                            // alert("block5");
-                            // alert("You tied the round!");
-                            // change roundtype with a 50% chance of either higher or lower
-                            var roundtype = Math.floor(Math.random() * 2) == 0 ? "Higher" : "Lower";
-                            // set lclstrg roundtype to roundtype
-                            localStorage.setItem("roundtype", roundtype);
-                            // apply tiescore 1s 1 animation to score[0]
-                            document.getElementsByClassName("score")[0].style.animation = "tie_score 1s 1"; 
-                            // settimeout to wait for animation to finish
-                            // set the roundtype
-                            document.getElementsByClassName("currentround")[0].innerHTML = "Current Round: " + roundtype;
-                            
-                            setTimeout(function() {
-                                // remove animation
-                                document.getElementsByClassName("score")[0].style.animation = "none";
-                                // now, let the player be able to play
-                                isturn = true;
-                                var player_array = playercard_values;
-                                var player_card = card;
-                                var player_card_index = player_array.indexOf(parseInt(player_card.getAttribute("val")));
-                                var new_card = deck.pop();
-                                player_card.setAttribute("val", new_card);
-                                player_card.innerHTML = new_card;
-
-                                // Same for the opponent
-                                var opponent_card = document.getElementsByClassName("opponentcard")[opponent_card_index];
-                                var new_card = deck.pop();
-                                opponent_card.setAttribute("val", new_card);
-                                opponent_card.innerHTML = "?";
-                                // change the array of opponent card values
-                                opponentcard_values[opponent_card_index] = new_card;
-
-                            }, 2000);
-
-                        } else {
-                            // alert("block6");
-                            // alert("You lost the round!");
-                            // oscore ++
-                            var pscore = localStorage.getItem("pscore");
-                            var oscore = localStorage.getItem("oscore");
-                            // increment oscore by 1
-                            oscore = parseInt(oscore);
-                            oscore += 1;
-                            // set lclstrg oscore to oscore
-                            localStorage.setItem("oscore", oscore);
-                            // apply score_down 1s 1 animation to score[0]
-                            document.getElementsByClassName("score")[0].style.animation = "score_down 1s 1";
-                            // change the score
-                            document.getElementsByClassName("score")[0].innerHTML = "Score: " + pscore + " - " + oscore;
-                            // settimeout to wait for animation to finish
-                            var roundtype = Math.floor(Math.random() * 2) == 0 ? "Higher" : "Lower";
-                            // set the roundtype
-                            document.getElementsByClassName("currentround")[0].innerHTML = "Current Round: " + roundtype;
-                            setTimeout(function() {
-                                // remove animation
-                                document.getElementsByClassName("score")[0].style.animation = "none";
-                                // now, let the player be able to play
-                                isturn = true;
-                                // if the player has lost 3 rounds, the game is over. apply shake_rapidly 2s 1 animation to the table
-                                if (oscore == 3) {
-                                    // apply shake_rapidly 2s 1 animation to the table
-                                    document.getElementsByClassName("table")[0].style.animation = "shake_rapidly 2s 1";
-                                    // settimeout to wait for animation to finish, but add 500ms more and go to unlock.html
-                                    setTimeout(function() {
-                                        // set lclstrg pscore and oscore to 0
-                                        localStorage.setItem("pscore", 0);
-                                        localStorage.setItem("oscore", 0);
-                                        // set lclstrg roundtype to NULL
-                                        localStorage.setItem("roundtype", "NULL");
-                                        // go to unlock.html
-                                        alert("You lost! However you can continue playing! Please press the continue button on the main menu.");
-                                        window.location.href = "index.html";
-                                    }, 2500);
-                                } else {
-                                    var player_array = playercard_values;
-                                    var player_card = card;
-                                    var player_card_index = player_array.indexOf(parseInt(player_card.getAttribute("val")));
-                                    var new_card = deck.pop();
-                                    player_card.setAttribute("val", new_card);
-                                    player_card.innerHTML = new_card;
-
-                                    // Same for the opponent
-                                    var opponent_card = document.getElementsByClassName("opponentcard")[opponent_card_index];
-                                    var new_card = deck.pop();
-                                    opponent_card.setAttribute("val", new_card);
-                                    opponent_card.innerHTML = "?";
-                                    // change the array of opponent card values
-                                    opponentcard_values[opponent_card_index] = new_card;
-                                }
-                            }, 2000);
-                        }
-                    })
+                    }, 3000);
                 }
+                // Add the animations to the score divs and the next round divs
+                scorediv.innerHTML = "Score: " + playerscore + " - " + opponentscore;
+                scorediv.style.animation = "score_down 1.5s 1";
+                
+                // Change the roundtype 
+                var nextroundtype = roundtypes.pop();
+                roundtypediv.innerHTML = "Current Round: " + nextroundtype;
+                localStorage.setItem("roundtype", nextroundtype);
+                roundtypediv.style.animation = "change_round 1.5s 1";
 
-                
-                
+                // Flip the opponent's card (apply flip 1.5s 1)
+                var ocard = document.getElementsByClassName("opponentcard")[opponent_choice_index];
+                ocard.style.animation = "flip 1.5s 1";
+                ocard.innerHTML = opponent_choice_val;
+
+                // SetTimeout for animations to finish and set to none
+                setTimeout(function() {
+                    scorediv.style.animation = "none";
+                    roundtypediv.style.animation = "none";
+                    ocard.style.animation = "none";
+                    ocard.innerHTML = "?";
+                    isturn = true;
+
+                    // Now, grabbing the playercard that was played, remove it from the deck
+                    var player_array = playercard_values;
+                    var playerchoice_index = player_array.indexOf(cardval);
+                    var new_card = deck.pop();
+                    card.setAttribute("val", new_card);
+                    card.innerHTML = new_card;
+
+                    // console.log("DEBUG: giving new card values (" + new_card + ") TO PLAYER");
+
+                    // Same for the opponent
+                    var opponent_array = opponentcard_values;
+                    var opponentchoice_index = opponent_array.indexOf(opponent_choice_val);
+                    new_card = deck.pop();
+                    opponent_choice.setAttribute("val", new_card);
+                    opponent_choice.innerHTML = "?";
+
+                    opponent_array[opponent_choice_index] = new_card; // Change the array
+
+                    // console.log("DEBUG: giving new card values (" + new_card + ") TO OPPONENT");
+
+                    // Break out
+                    setTimeout(function() {
+                        return;
+                    }, 100);
+                }, 1500);
             }
-                document.getElementsByClassName("currentround")[0].innerHTML = "Current Round: " + roundtype;
+
         }
 
     </script>

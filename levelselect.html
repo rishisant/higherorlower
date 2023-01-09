@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+    <head>  
+        <title>Higher or Lower</title>
+        <link rel="stylesheet" type="text/css" href="base.css">
+        <script src="script.js"></script>
+    </head>
+
+    <style>
+        /* levelcontainer: flex row displaying each element around 20px space in between */
+        /* levelblock: border radius 10px, a small square-sized with bold font and decent font size, f2f2f2 bg and black text */
+        /* skincontainer: flex row displaying each element with around 50px space in between */
+        /* skinblock: on hover, white glow animation, otherwise is a 100x150 size block with background images of the val attribute located in ./src/img */
+        .levelcontainer {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .levelblock {
+            border-radius: 10px;
+            width: 50px;
+            height: 50px;
+            font-size: 25px;
+            font-weight: bold;
+            background-color: #f2f2f2;
+            color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 20px;
+            outline: 2px solid black;
+        }
+
+        @keyframes unlockedlvl {
+            0% {
+                background-color: black;
+                color: black;
+                opacity: 0.5;
+                box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.7);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                opacity: 1;
+                background-color: #f2f2f2;
+                color: black;
+                box-shadow: 0 0 0 15px rgba(255, 255, 255, 0);
+            }
+        }
+
+        .skincontainer {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .skinblock {
+            width: 50px;
+            height: 88px;
+            /* background-image: url("./src/img/0.png"); */
+            background-size: 100% 100%;
+            border-radius: 10px;
+            margin: 0 20px;
+            outline: 1.5px solid black;
+        }
+
+        .skinblock_S {
+            width: 50px;
+            height: 88px;
+            background-size: 100% 100%;
+            border-radius: 10px;
+            margin: 0 20px;
+            outline: 1.5px solid black;
+            box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.7);
+        }
+
+        @keyframes white_glow {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+            }
+            100% {
+                box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+            }
+        }
+
+        .skinblock:hover {
+            animation: white_glow 1s infinite;
+            cursor: pointer;
+        }
+
+        .buttoncontainer {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .mmenu_button2 {
+            background-color: #fff;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 1.1em;
+            margin: 10px;
+            /* margin-left: 30%; */
+            margin-right: 50px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            box-shadow: 0 0 10px #000, 0 0 10px #000, 0 0 10px #000;
+            /* animation: selected 3s infinite; */
+        }
+
+        .mmenu_button2:hover {
+            background-color: #000;
+            color: #fff;
+        }
+
+        /* 
+        Backgrounds:
+        1-> ./src/img/normalcard.png
+        2-> ./src/img/tamilcard.png
+        3-> ./src/img/chromecard.png
+        4-> ./src/img/indiancard.png
+        5-> ./src/img/azteccard.png
+        6-> ./src/img/furcard.png
+        7-> ./src/img/japanesecard.png
+        8-> ./src/img/oldschoolcard.png
+        9-> ./src/img/medievalcard.png
+        10-> ./src/img/porcelaincard.png
+        11-> ./src/img/redyarn.png
+        12-> ./src/img/royalcard.png
+        13-> ./src/img/goldenhoneycomb.png
+        14-> ./src/img/plantcard.png
+        15-> ./src/img/scalycard.png
+        16-> ./src/img/pagodastyle.png
+        17-> ./src/img/egyptianstyle.png
+         */
+
+        #s1 {
+            background-image: url("./src/img/normalcard.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+        #s2 {
+            background-image: url("./src/img/tamilcard.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+        #s3 {
+            background-image: url("./src/img/chromecard.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+        #s4 {
+            background-image: url("./src/img/indiancard.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+        #s5 {
+            background-image: url("./src/img/azteccard.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+        #s6 {
+            background-image: url("./src/img/furcard.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+        #s7 {
+            background-image: url("./src/img/japanesecard.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+        #s8 {
+            background-image: url("./src/img/oldschoolcard.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+        #s9 {
+            background-image: url("./src/img/medievalcard.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+        #s10 {
+            background-image: url("./src/img/porcelaincard.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+        #s11 {
+            background-image: url("./src/img/redyarn.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+        #s12 {
+            background-image: url("./src/img/royalcard.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+        #s13 {
+            background-image: url("./src/img/goldenhoneycomb.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+        #s14 {
+            background-image: url("./src/img/plantcard.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+        #s15 {
+            background-image: url("./src/img/scalycard.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+        #s16 {
+            background-image: url("./src/img/pagodastyle.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+        #s17 {
+            background-image: url("./src/img/egyptianstyle.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+
+
+
+    </style>
+
+    <script>
+        function nextlvl() {
+            // relocate to game.html
+            window.location.href = "game.html";
+        }
+        function backbtn() {
+            // relocate to index
+            window.location.href = "index.html";
+        }
+
+        function onload() {
+            var currskin = localStorage.getItem("style");
+            // iterate through all divs of classname skinblock
+            var lvl = localStorage.getItem("level");
+            var sblocks = document.getElementsByClassName("skinblock");
+            for (var i = 0; i < sblocks.length; ++i) {
+                if (currskin == sblocks[i].getAttribute("val")) {
+                    sblocks[i].className = "skinblock_S";
+                }
+                var sans_s = sblocks[i].id.substring(1);
+                if (sans_s == 2) {
+                    // only display if lclstorage -> giftretrieved == true
+                    if (localStorage.getItem("giftretrieved") == "true") {
+                        sblocks[i].style.display = "block";
+                    } else {
+                        sblocks[i].style.display = "none";
+                    }
+                } else {
+                    // only display if <= parseInt(lvl)
+                    if (sans_s-2 <= parseInt(lvl)) {
+                        sblocks[i].style.display = "block";
+                    } else {
+                        sblocks[i].style.display = "none";
+                    }
+                }
+            }
+            // now, check for achievements
+            if (localStorage.getItem("treefriend") == "true") {
+                document.getElementById("s14").style.display = "block";
+            } else {
+                document.getElementById("s14").style.display = "none";
+            }
+            if (localStorage.getItem("imawinner") == "true") {
+                document.getElementById("s13").style.display = "block";
+            } else {
+                document.getElementById("s13").style.display = "none";
+            }
+            if (localStorage.getItem("thedominator") == "true") {
+                document.getElementById("s15").style.display = "block";
+            } else {
+                document.getElementById("s15").style.display = "none";
+            }
+            if (localStorage.getItem("downtothewire") == "true") {
+                document.getElementById("s16").style.display = "block";
+            } else {
+                document.getElementById("s16").style.display = "none";
+            }
+            if (localStorage.getItem("ultchallenge") == "true") {
+                document.getElementById("s17").style.display = "block";
+            } else {
+                document.getElementById("s17").style.display = "none";
+            }
+
+            // now, with the levels that havent been completed, change the style of levelblocks with the val attribute < lvl
+            var lvlblockdivs = document.getElementsByClassName("levelblock");
+            for (var i = 0; i < lvlblockdivs.length; ++i) {
+                // if the level is the same, apply an animation to the div[i]
+                if (parseInt(lvlblockdivs[i].getAttribute("val")) > parseInt(lvl)) {
+                    lvlblockdivs[i].style.backgroundColor = "#000000";
+                    lvlblockdivs[i].style.color = "#ffffff";
+                    lvlblockdivs[i].style.cursor = "default";
+                    lvlblockdivs[i].style.opacity = "0.5";
+                } else if (parseInt(lvlblockdivs[i].getAttribute("val")) == parseInt(lvl)) {
+                    lvlblockdivs[i].style.animation = "unlockedlvl 3s 1"; // lvl unlocked animation
+                }
+            }
+            
+        }
+
+        function equipskin() {
+            var elem = event.target;
+            var val = elem.getAttribute("val");
+            localStorage.setItem("style", val);
+            alert("Skin equipped!");
+            // change the classname of the event.target to skinblock_S
+            elem.className = "skinblock_S";
+            // change all other skinblock_S to skinblock
+            var equippedalready = document.getElementsByClassName("skinblock_S");
+            for (var i = 0; i < equippedalready.length; ++i) {
+                if (equippedalready[i].getAttribute("val") != val) {
+                    equippedalready[i].className = "skinblock";
+                }
+            }
+        }
+
+    </script>
+
+    <!-- ➢ -->
+    <body onload="onload()">
+        <div class="title">Level Select</div>
+        <div class="generalheader" style="margin-bottom: 40px;">Here you can view your current progress and equip your unlocked skins!</div>
+        
+        <div class="levelcontainer">
+            <div class="levelblock" val="1">
+                1
+            </div>
+            <div class="levelblock" val="2">
+                2
+            </div>
+            <div class="levelblock" val="3">
+                3
+            </div>
+            <div class="levelblock" val="4">
+                4
+            </div>
+            <div class="levelblock" val="5">
+                5
+            </div>
+            <div class="levelblock" val="6">
+                6
+            </div>
+            <div class="levelblock" val="7">
+                7
+            </div>
+            <div class="levelblock" val="8">
+                8
+            </div>
+            <div class="levelblock" val="9">
+                9
+            </div>
+            <div class="levelblock" val="10">
+                10
+            </div>
+        </div>
+
+        <div class="skincontainer">
+            <div class="skinblock" id="s1" val="normalcard" onclick="equipskin()">
+
+            </div>
+            <div class="skinblock" id="s2" val="tamilcard" onclick="equipskin()">
+
+            </div>
+            <div class="skinblock" id="s3" val="chromecard" onclick="equipskin()">
+            
+            </div>
+            <div class = "skinblock" id="s4" val="indiancard" onclick="equipskin()">
+            
+            </div>
+            <div class = "skinblock" id="s5" val="azteccard" onclick="equipskin()">
+            
+            </div>
+            <div class="skinblock" id="s6" val="furcard" onclick="equipskin()">
+            
+            </div>
+            <div class="skinblock" id="s7" val="japanesecard" onclick="equipskin()">
+            
+            </div>
+            <div class="skinblock" id="s8" val="oldschoolcard" onclick="equipskin()">
+            
+            </div>
+            <div class="skinblock" id="s9" val="medievalcard" onclick="equipskin()">
+            
+            </div>
+            <div class="skinblock" id="s10" val="porcelaincard" onclick="equipskin()">
+
+            </div>
+            <div class="skinblock" id="s11" val="redyarn" onclick="equipskin()">
+
+            </div>
+            <div class="skinblock" id="s12" val="royalcard" onclick="equipskin()">
+            
+            </div>
+            <div class="skinblock" id="s13" val="goldenhoneycomb" onclick="equipskin()">
+
+            </div>
+            <div class="skinblock" id="s14" val="plantcard" onclick="equipskin()">
+
+            </div>
+            <div class="skinblock" id="s15" val="scalycard" onclick="equipskin()">
+
+            </div>
+            <div class="skinblock" id="s16" val="pagodastyle" onclick="equipskin()">
+
+            </div>
+            <div class="skinblock" id="s17" val="egyptianstyle" onclick="equipskin()">
+
+            </div>
+        </div>
+
+        <div class="buttoncontainer">
+            <div class="mmenu_button2" onclick="nextlvl()">Next Level</div>
+            <div class="mmenu_button2" onclick="backbtn()">Return Home</div>
+        </div>
+        
+    </body>
+
+</html>

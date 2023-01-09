@@ -7,157 +7,48 @@
     </head>
 
     <script>
+        var allstyles = ["chromecard", "indiancard", "azteccard", "furcard", "japanesecard", "oldschoolcard", "medievalcard", "porcelaincard", "redyarn", "royalcard"]
+        var styledesc = ["Chrome Card Style", "Indian Card Style", "Aztec Card Style", "Fur Card Style", "Japanese Card Style", "Old-Timey Style", "Medieval Card Style", "Porcelain Card Style", "Yarn Card Style", "Royal Card Style"]
+
         // create an onload function to check which level the player is on
-        // if the player is on level 1, then the player has just completed the tutorial
         function onload() {
-            var current_level = localStorage.getItem("level");
-            current_level = parseInt(current_level);
-            // for now, just add checks for the tutorial
-            if (current_level == 1) {
-                // if the player is on level 1, then the player has just completed the tutorial
-                // grab the to_unlock id div
-                var to_unlock = document.getElementById("to_unlock");
-                // add the text to the div
-                to_unlock.innerHTML = localStorage.getItem("name") + " HAS UNLOCKED: Chrome Card Style";
-                localStorage.setItem("pscore", 0);
-                localStorage.setItem("oscore", 0);
+            // Grab current level
+            var currentlevel = parseInt(localStorage.getItem("level"));
 
-                // change the unlockedcard's style bg to chromecard.png
-                var unlockedcard = document.getElementsByClassName("unlockedcard")[0];
-                unlockedcard.style.backgroundImage = "url('./src/img/chromecard.png')";
-                unlockedcard.style.backgroundSize = "cover";
-                unlockedcard.style.backgroundPosition = "center";
-                unlockedcard.style.backgroundRepeat = "no-repeat";
-            } else if (current_level == 2) {
-                // grab the to_unlock id div
-                var to_unlock = document.getElementById("to_unlock");
-                // add the text to the div
-                to_unlock.innerHTML = localStorage.getItem("name") + " HAS UNLOCKED: Indian Card Style";
-                localStorage.setItem("pscore", 0);
-                localStorage.setItem("oscore", 0);
+            // Grab divs
+            var to_unlock = document.getElementById("to_unlock");
+            var unlockedcard = document.getElementsByClassName("unlockedcard")[0];
 
-                // change the unlockedcard's style bg to chromecard.png
-                var unlockedcard = document.getElementsByClassName("unlockedcard")[0];
-                unlockedcard.style.backgroundImage = "url('./src/img/indiancard.png')";
-                unlockedcard.style.backgroundSize = "cover";
-                unlockedcard.style.backgroundPosition = "center";
-                unlockedcard.style.backgroundRepeat = "no-repeat";
-            } else if (current_level == 3) {
-                // grab the to_unlock id div
-                var to_unlock = document.getElementById("to_unlock");
-                // add the text to the div
-                to_unlock.innerHTML = localStorage.getItem("name") + " HAS UNLOCKED: Aztec Card Style";
-                localStorage.setItem("pscore", 0);
-                localStorage.setItem("oscore", 0);
+            // Now, set the innerHTML to the level - 1st index of allstyles and styledesc
+            to_unlock.innerHTML = localStorage.getItem("name") + " HAS UNLOCKED: " + styledesc[currentlevel - 1];
 
-                // change the unlockedcard's style bg to chromecard.png
-                var unlockedcard = document.getElementsByClassName("unlockedcard")[0];
-                unlockedcard.style.backgroundImage = "url('./src/img/azteccard.png')";
-                unlockedcard.style.backgroundSize = "cover";
-                unlockedcard.style.backgroundPosition = "center";
-                unlockedcard.style.backgroundRepeat = "no-repeat";
-            } else if (current_level == 4) {
-                // grab the to_unlock id div
-                var to_unlock = document.getElementById("to_unlock");
-                // add the text to the div
-                to_unlock.innerHTML = localStorage.getItem("name") + " HAS UNLOCKED: Japanese Card Style";
-                localStorage.setItem("pscore", 0);
-                localStorage.setItem("oscore", 0);
-
-                // change the unlockedcard's style bg to chromecard.png
-                var unlockedcard = document.getElementsByClassName("unlockedcard")[0];
-                unlockedcard.style.backgroundImage = "url('./src/img/japanesecard.png')";
-                unlockedcard.style.backgroundSize = "cover";
-                unlockedcard.style.backgroundPosition = "center";
-                unlockedcard.style.backgroundRepeat = "no-repeat";
-            } else if (current_level == 5) {
-                // grab the to_unlock id div
-                var to_unlock = document.getElementById("to_unlock");
-                // add the text to the div
-                to_unlock.innerHTML = localStorage.getItem("name") + " HAS UNLOCKED: Medieval Card Style";
-                localStorage.setItem("pscore", 0);
-                localStorage.setItem("oscore", 0);
-
-                // change the unlockedcard's style bg to chromecard.png
-                var unlockedcard = document.getElementsByClassName("unlockedcard")[0];
-                unlockedcard.style.backgroundImage = "url('./src/img/medievalcard.png')";
-                unlockedcard.style.backgroundSize = "cover";
-                unlockedcard.style.backgroundPosition = "center";
-                unlockedcard.style.backgroundRepeat = "no-repeat";
-            } else if (current_level == 6) {
-                // grab the to_unlock id div
-                var to_unlock = document.getElementById("to_unlock");
-                // add the text to the div
-                to_unlock.innerHTML = localStorage.getItem("name") + " HAS UNLOCKED: Golden Honeycomb Card Style";
-                localStorage.setItem("pscore", 0);
-                localStorage.setItem("oscore", 0);
-
-                // change the unlockedcard's style bg to chromecard.png
-                var unlockedcard = document.getElementsByClassName("unlockedcard")[0];
-                unlockedcard.style.backgroundImage = "url('./src/img/goldenhoneycomb.png')";
-                unlockedcard.style.backgroundSize = "cover";
-                unlockedcard.style.backgroundPosition = "center";
-                unlockedcard.style.backgroundRepeat = "no-repeat";
-            }
+            // Change the style bg to allstyles + .png
+            unlockedcard.style.backgroundImage = "url('./src/img/" + allstyles[currentlevel - 1] + ".png')";
+            unlockedcard.style.backgroundSize = "cover";
+            unlockedcard.style.backgroundPosition = "center";
+            unlockedcard.style.backgroundRepeat = "no-repeat";
         }
 
         function equipstyle() {
-            // grab the level id
-            var level = localStorage.getItem("level");
-            if (level == 1) {
-                // if the player is on level 1, then the player has just completed the tutorial, thus acquiring chromecard
-                // equip the chrome card style
-                localStorage.setItem("style", "chromecard");
-                alert("Style: Chrome Card equipped!")
-                // redirect to the game
-                // window.location.href = "game.html";
-            } else if (level == 2) {
-                // if the player is on level 2, then the player has just completed the first level, thus acquiring indiancard
-                // equip the indian card style
-                localStorage.setItem("style", "indiancard");
-                alert("Style: Indian Card equipped!")
-                // redirect to the game
-                // window.location.href = "game.html";
-            } else if (level == 3) {
-                // if the player is on level 3, then the player has just completed the second level, thus acquiring azteccard
-                // equip the aztec card style
-                localStorage.setItem("style", "azteccard");
-                alert("Style: Aztec Card equipped!")
-                // redirect to the game
-                // window.location.href = "game.html";
-            } else if (level == 4) {
-                // if the player is on level 4, then the player has just completed the third level, thus acquiring japanesecard
-                // equip the japanese card style
-                localStorage.setItem("style", "japanesecard");
-                alert("Style: Japanese Card equipped!")
-                // redirect to the game
-                // window.location.href = "game.html";
-            } else if (level == 5) {
-                // if the player is on level 5, then the player has just completed the fourth level, thus acquiring medievalcard
-                // equip the medieval card style
-                localStorage.setItem("style", "medievalcard");
-                alert("Style: Medieval Card equipped!")
-                // redirect to the game
-                // window.location.href = "game.html";
-            } else if (level == 6) {
-                // if the player is on level 6, then the player has just completed the fifth level, thus acquiring goldenhoneycomb
-                // equip the golden honeycomb card style
-                localStorage.setItem("style", "goldenhoneycomb");
-                alert("Style: Golden Honeycomb Card equipped!")
-                // redirect to the game
-                // window.location.href = "game.html";
-            }
+            // Grab current level
+            var currentlevel = parseInt(localStorage.getItem("level"));
+
+            // Set the style to the current level - 1st index of allstyles
+            localStorage.setItem("style", allstyles[currentlevel - 1]);
+
+            // Alert user
+            alert("Style: " + styledesc[currentlevel - 1] + " equipped!");
         }
 
         function nextlevel() {
-            if (parseInt(localStorage.getItem("level")) == 6) {
+            if (parseInt(localStorage.getItem("level")) == 11) {
                 // alert("next level");
                 window.location.href = "index.html";
                 localStorage.setItem("pscore", 0);
                 localStorage.setItem("oscore", 0);
             } else {
                 // relocated to game.html
-                window.location.href = "game.html";
+                window.location.href = "levelselect.html";
                 //reset the score
                 localStorage.setItem("pscore", 0);
                 localStorage.setItem("oscore", 0);

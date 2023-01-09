@@ -44,7 +44,7 @@ function mmenu_buttonclick(but) {
             window.location.href = "instructions.html";
         } else if (but == 3) {
             document.getElementById("continue").style.animation = "none";
-            window.location.href = "game.html";
+            window.location.href = "levelselect.html";
         } else if (but == 4) {
             document.getElementById("achievements").style.animation = "none";
             window.location.href = "achievements.html";
